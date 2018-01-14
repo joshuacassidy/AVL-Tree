@@ -26,7 +26,7 @@ public class Avl implements Tree {
     // This is where we check if the tree is legal meaning if the operation we have preformed has destabilised the tree or not.
     private Node settleViolation(int data, Node node){
         // Will calculate the height of the left and right subtrees. if the tree is balence this value will not be more than 1. When it is in the range of +1,0 or -1 we know that the tree is balanced. if balance is greater than one (height of left - height of right) we know that it is a right heavy tree and if the balance is less than -1 we know that it is a right heavy tree (to many nodes on the right).
-        int balance = getBalence(node);
+        int balance = getBalance(node);
 
         // node passed in is the grand parent of the newly inserted nodes grand parent the data is greater than the data that we have inserted means that this node that we have inserted is a left child of a left child. Its going to be left heavy make single left then right or one right. We know that the node is the grand parent because the insert function uses recursion which allows us to check every case of a tree or sb tree being unbalanced. The node and data that are passed in are linked with a grandparent and grandchild relationship. So when we check if the data < is less than the node.left.data we are comparing the node to its parent node.
 
@@ -61,18 +61,21 @@ public class Avl implements Tree {
 
     @Override
     public void traverse() {
-        if(root == null ) return;
-        inOrder(root);
+        if(root == null ) throw new TreeIsEmptyException("Can't traverse an empty tree");
+        inOrderTraversal(root);
+        System.out.println();
     }
 
-    private void inOrder(Node node) {
+    @Override
+    public void inOrderTraversal(Node node) {
         if(node.left != null) {
-            inOrder(node.left);
+            inOrderTraversal(node.left);
             System.out.println(node);
-            inOrder(node.right);
+            inOrderTraversal(node.right);
         }
     }
 
+    @Override
     public void postOrderTraversal(Node node) {
         if (node != null) {
             postOrderTraversal(node.left);
@@ -81,6 +84,7 @@ public class Avl implements Tree {
         }
     }
 
+    @Override
     public void preOrderTraversal(Node node) {
         if (node != null) {
             System.out.print(node.data + " ");
@@ -95,7 +99,7 @@ public class Avl implements Tree {
         return node.height;
     }
 
-    public int getBalence(Node node){
+    public int getBalance(Node node){
         if(node == null) return 0;
 
         return height(node.left) - height(node.right);
@@ -191,12 +195,12 @@ public class Avl implements Tree {
 
     private Node settleDeletion(Node node) {
 
-        int balance = getBalence(node);
+        int balance = getBalance(node);
 
         // When it is a left heavy situation this can either mean left-right or doubly left heavy
         if(balance > 1){
             // it will be a left-right heavy situation when the balance on the left sub tree is smaller than 0
-            if(getBalence(node.left) < 0){
+            if(getBalance(node.left) < 0){
                 node.left = leftRotation(node.left);
             }
             // Otherwise it will be a doubly left heavy situation
@@ -206,7 +210,7 @@ public class Avl implements Tree {
         // When it is a right heavy situation this can either mean right-left or doubly right heavy
         if(balance < -1){
             // it will be a right-left heavy situation when the balance on the right sub tree is greater than 0
-            if(getBalence(node.right) > 0){
+            if(getBalance(node.right) > 0){
                 node.right = rightRotation(node.right);
             }
             // Otherwise it will be a doubly right heavy situation
@@ -216,13 +220,15 @@ public class Avl implements Tree {
         return node;
     }
 
-    private Node getPredecessor(Node node) {
+    @Override
+    public Node getPredecessor(Node node) {
         if(node.right != null)
             return getPredecessor(node.right);
 
         return node;
     }
 
+    @Override
     public boolean search(int key) {
         if (isEmpty()) {
             throw new TreeIsEmptyException("Error items cannot be searched in an empty tree.");
@@ -230,7 +236,7 @@ public class Avl implements Tree {
             return search(root, key);
         }
     }
-
+    @Override
     public boolean search(Node node, int key) {
         if(node == null) {
             return false;
@@ -246,6 +252,7 @@ public class Avl implements Tree {
         }
     }
 
+    @Override
     public boolean isEmpty() {
         return root == null;
     }
