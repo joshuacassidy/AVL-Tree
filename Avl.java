@@ -68,9 +68,9 @@ public class Avl implements Tree {
 
     @Override
     public void inOrderTraversal(Node node) {
-        if(node.left != null) {
+        if(node != null) {
             inOrderTraversal(node.left);
-            System.out.println(node);
+            System.out.print(node + " ");
             inOrderTraversal(node.right);
         }
     }
@@ -93,6 +93,7 @@ public class Avl implements Tree {
         }
     }
 
+    @Override
     public int height(Node node){
         if(node == null) return -1;
 
@@ -106,7 +107,6 @@ public class Avl implements Tree {
     }
 
     private Node rightRotation(Node node){
-        System.out.println("Rotating to the right on node: " + node );
         // The node passed in is going to be the right child of its left node.
         Node newParent = node.left;
         Node newChild = newParent.right;
@@ -121,7 +121,6 @@ public class Avl implements Tree {
     }
 
     private Node leftRotation(Node node){
-        System.out.println("Rotating to the left on node: " + node);
         // The node passed in is going to be the right child of its left node.
         Node newParent = node.right;
         Node newChild = newParent.left;
@@ -139,7 +138,10 @@ public class Avl implements Tree {
     public void delete(int data) {
         if(root != null){
             root = delete(root,data);
+        } else {
+            throw new TreeIsEmptyException("Can't delete from an empty tree");
         }
+
     }
 
     public Node delete(Node node, int data) {
@@ -156,20 +158,17 @@ public class Avl implements Tree {
 
             // When removing a leaf node just return null.
             if(node.left == null && node.right == null){
-                System.out.println("Removing leaf node");
                 return null;
             }
 
             // Removing a node with a single right child
             if(node.left == null){
-                System.out.println("Removing removing the right child");
                 Node tempNode = node.right;
                 node = null;
                 // assigning the node for the parent to point to as the temp node
                 return tempNode;
             } else if(node.right == null){
                 // Removing a node with a single left child
-                System.out.println("Removing removing the left child");
                 Node tempNode = node.left;
                 node = null;
                 // assigning the node for the parent to point to as the temp node
@@ -177,7 +176,7 @@ public class Avl implements Tree {
             }
 
             // Removing a node that has two children
-            System.out.println("Removing item with two childern");
+
             // Setting the temporary node to the predecessor which is the biggest node in the left subtree relative to the node that will be deleted.
             Node tempNode = getPredecessor(node.left);
 
@@ -257,4 +256,8 @@ public class Avl implements Tree {
         return root == null;
     }
 
+    @Override
+    public Node getRoot() {
+        return root;
+    }
 }

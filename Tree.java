@@ -10,4 +10,6 @@ public interface Tree {
     public boolean search(Node node, int key);
     public Node getPredecessor(Node node);
     public boolean isEmpty();
+    public int height(Node node);
+    public Node getRoot();
 }
