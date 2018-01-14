@@ -66,14 +66,28 @@ public class Avl implements Tree {
     }
 
     private void inOrder(Node node) {
-        if(node.left != null) inOrder(node.left);
-
-        System.out.println(node);
-
-        if(node.right != null) inOrder(node.right);
-
+        if(node.left != null) {
+            inOrder(node.left);
+            System.out.println(node);
+            inOrder(node.right);
+        }
     }
-    
+
+    public void postOrderTraversal(Node node) {
+        if (node != null) {
+            postOrderTraversal(node.left);
+            postOrderTraversal(node.right);
+            System.out.print(node.data + " ");
+        }
+    }
+
+    public void preOrderTraversal(Node node) {
+        if (node != null) {
+            System.out.print(node.data + " ");
+            preOrderTraversal(node.left);
+            preOrderTraversal(node.right);
+        }
+    }
 
     public int height(Node node){
         if(node == null) return -1;
