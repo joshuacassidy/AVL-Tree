@@ -14,13 +14,9 @@ public class Avl implements Tree {
 
         if(data < node.data){
             node.left = insert(node.left,data);
-        } else if(data > node.data){
-            node.right = insert(node.right,data);
         } else {
-            System.out.println("This node already exists in this tree!");
-            return node;
+            node.right = insert(node.right,data);
         }
-
         node.height = Math.max(height(node.left), height(node.right)) +1;
         node = settleViolation(data,node);
 
@@ -77,6 +73,7 @@ public class Avl implements Tree {
         if(node.right != null) inOrder(node.right);
 
     }
+    
 
     public int height(Node node){
         if(node == null) return -1;
@@ -214,8 +211,7 @@ public class Avl implements Tree {
 
     public boolean search(int key) {
         if (isEmpty()) {
-            System.out.println("No happening");
-            return false;
+            throw new TreeIsEmptyException("Error items cannot be searched in an empty tree.");
         } else {
             return search(root, key);
         }
