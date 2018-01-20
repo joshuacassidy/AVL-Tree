@@ -1,10 +1,10 @@
-public class Node {
-    public int data;
+public class Node<T extends Comparable<T>> {
+    public T data;
     public Node left;
     public Node right;
     public int height;
 
-    public Node(int data){
+    public Node(T data){
         this.data = data;
     }
 

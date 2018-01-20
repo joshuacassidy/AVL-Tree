@@ -1,18 +1,19 @@
-public class Avl implements Tree {
+public class Avl<T extends Comparable<T>> implements IAvl {
 
-    private Node root;
+    private Node<T> root;
+
 
     @Override
-    public void insert(int data) {
+    public void insert(Comparable data) {
         root = insert(root,data);
     }
 
-    public Node insert(Node node, int data) {
+    public Node<T> insert(Node node, Comparable data) {
         if(node == null) return new Node(data);
 
 
 
-        if(data < node.data){
+        if(data.compareTo(node.data) < 0){
             node.left = insert(node.left,data);
         } else {
             node.right = insert(node.right,data);
@@ -24,24 +25,24 @@ public class Avl implements Tree {
     }
 
     // This is where we check if the tree is legal meaning if the operation we have preformed has destabilised the tree or not.
-    private Node settleViolation(int data, Node node){
+    private Node settleViolation(Comparable data, Node node){
         // Will calculate the height of the left and right subtrees. if the tree is balence this value will not be more than 1. When it is in the range of +1,0 or -1 we know that the tree is balanced. if balance is greater than one (height of left - height of right) we know that it is a right heavy tree and if the balance is less than -1 we know that it is a right heavy tree (to many nodes on the right).
         int balance = getBalance(node);
 
         // node passed in is the grand parent of the newly inserted nodes grand parent the data is greater than the data that we have inserted means that this node that we have inserted is a left child of a left child. Its going to be left heavy make single left then right or one right. We know that the node is the grand parent because the insert function uses recursion which allows us to check every case of a tree or sb tree being unbalanced. The node and data that are passed in are linked with a grandparent and grandchild relationship. So when we check if the data < is less than the node.left.data we are comparing the node to its parent node.
 
         // Doubly left heavy tree.
-        if(balance > 1 && data < node.left.data){
+        if(balance > 1 && data.compareTo(node.left.data) < 0){
             return  rightRotation(node);
         }
 
         // Doubly right heavy tree.
-        if(balance < -1 && data > node.right.data){
+        if(balance < -1 && data.compareTo(node.right.data) > 0){
             return  leftRotation(node);
         }
 
         // Left right heavy tree *note it doesn't matter if nodes have left or right children we don't modify pointers for them so its pretty irrelevant.
-        if(balance > 1 && data > node.left.data) {
+        if(balance > 1 && data.compareTo(node.left.data) < 0) {
             // Rotating the the left child to the left so this will be the nodes child we rotate
             node.left = leftRotation(node.left);
             // then we finally rotate the parent to the left to balence the tree
@@ -49,7 +50,7 @@ public class Avl implements Tree {
         }
 
         // Right left heavy tree
-        if(balance < -1 && data < node.right.data) {
+        if(balance < -1 && data.compareTo(node.right.data) > 0) {
             // Rotating the the right child to the right so this will be the nodes child we rotate
             node.right = rightRotation(node.right);
             // then we finally rotate the parent to the left to balence the tree
@@ -135,7 +136,7 @@ public class Avl implements Tree {
     }
 
     @Override
-    public void delete(int data) {
+    public void delete(Comparable data) {
         if(root != null){
             root = delete(root,data);
         } else {
@@ -144,13 +145,13 @@ public class Avl implements Tree {
 
     }
 
-    public Node delete(Node node, int data) {
+    public Node delete(Node node, Comparable data) {
         if(node == null) return node;
 
         // The data is smaller than the node that we want go left (recursively)
-        if(data < node.data ){
+        if(data.compareTo(node.data) < 0 ){
             node.left = delete(node.left,data);
-        } else if(data > node.data){
+        } else if(data.compareTo(node.data) > 0){
             // The data is bigger than the node that we want go right (recursively)
             node.right = delete(node.right,data);
         } else {
@@ -228,7 +229,7 @@ public class Avl implements Tree {
     }
 
     @Override
-    public boolean search(int key) {
+    public boolean search(Comparable key) {
         if (isEmpty()) {
             throw new TreeIsEmptyException("Error items cannot be searched in an empty tree.");
         } else {
@@ -236,14 +237,13 @@ public class Avl implements Tree {
         }
     }
     @Override
-    public boolean search(Node node, int key) {
+    public boolean search(Node node, Comparable key) {
         if(node == null) {
             return false;
         } else {
-            System.out.println(node.data);
-            if (node.data > key) {
+            if (node.data.compareTo(key) > 0) {
                 return search(node.left,key);
-            } else if (node.data < key) {
+            } else if (node.data.compareTo(key) < 0) {
                 return search(node.right,key);
             } else {
                 return true;
