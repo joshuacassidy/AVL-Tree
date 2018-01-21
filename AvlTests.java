@@ -20,10 +20,10 @@ public class AvlTests {
     @Test
     public void add() throws Exception {
         testIAvl.insert(2);
-        assertEquals(2, testIAvl.getRoot().data);
+        assertEquals(2, testIAvl.getRoot().getData());
         testIAvl.insert(3);
         testIAvl.insert(4);
-        assertEquals(3, testIAvl.getRoot().data);
+        assertEquals(3, testIAvl.getRoot().getData());
         assertEquals(false, testIAvl.isEmpty());
     }
 
@@ -33,9 +33,9 @@ public class AvlTests {
         testIAvl.insert(3);
         testIAvl.insert(4);
         testIAvl.delete(3);
-        assertEquals(2, testIAvl.getRoot().data);
+        assertEquals(2, testIAvl.getRoot().getData());
         testIAvl.delete(2);
-        assertEquals(4, testIAvl.getRoot().data);
+        assertEquals(4, testIAvl.getRoot().getData());
 
     }
 

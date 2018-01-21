@@ -13,12 +13,12 @@ public class Avl<T extends Comparable<T>> implements IAvl {
 
 
 
-        if(data.compareTo(node.data) < 0){
-            node.left = insert(node.left,data);
+        if(data.compareTo(node.getData()) < 0){
+            node.setLeft(insert(node.getLeft(),data));
         } else {
-            node.right = insert(node.right,data);
+            node.setRight(insert(node.getRight(),data));
         }
-        node.height = Math.max(height(node.left), height(node.right)) +1;
+        node.setHeight(Math.max(height(node.getLeft()), height(node.getRight())) +1);
         node = settleViolation(data,node);
 
         return node;
@@ -32,27 +32,27 @@ public class Avl<T extends Comparable<T>> implements IAvl {
         // node passed in is the grand parent of the newly inserted nodes grand parent the data is greater than the data that we have inserted means that this node that we have inserted is a left child of a left child. Its going to be left heavy make single left then right or one right. We know that the node is the grand parent because the insert function uses recursion which allows us to check every case of a tree or sb tree being unbalanced. The node and data that are passed in are linked with a grandparent and grandchild relationship. So when we check if the data < is less than the node.left.data we are comparing the node to its parent node.
 
         // Doubly left heavy tree.
-        if(balance > 1 && data.compareTo(node.left.data) < 0){
+        if(balance > 1 && data.compareTo(node.getLeft().getData()) < 0){
             return  rightRotation(node);
         }
 
         // Doubly right heavy tree.
-        if(balance < -1 && data.compareTo(node.right.data) > 0){
+        if(balance < -1 && data.compareTo(node.getRight().getData()) > 0){
             return  leftRotation(node);
         }
 
         // Left right heavy tree *note it doesn't matter if nodes have left or right children we don't modify pointers for them so its pretty irrelevant.
-        if(balance > 1 && data.compareTo(node.left.data) < 0) {
+        if(balance > 1 && data.compareTo(node.getLeft().getData()) < 0) {
             // Rotating the the left child to the left so this will be the nodes child we rotate
-            node.left = leftRotation(node.left);
+            node.setLeft(leftRotation(node.getLeft()));
             // then we finally rotate the parent to the left to balence the tree
             return rightRotation(node);
         }
 
         // Right left heavy tree
-        if(balance < -1 && data.compareTo(node.right.data) > 0) {
+        if(balance < -1 && data.compareTo(node.getRight().getData()) > 0) {
             // Rotating the the right child to the right so this will be the nodes child we rotate
-            node.right = rightRotation(node.right);
+            node.setRight(rightRotation(node.getRight()));
             // then we finally rotate the parent to the left to balence the tree
             return leftRotation(node);
         }
@@ -70,27 +70,27 @@ public class Avl<T extends Comparable<T>> implements IAvl {
     @Override
     public void inOrderTraversal(Node node) {
         if(node != null) {
-            inOrderTraversal(node.left);
+            inOrderTraversal(node.getLeft());
             System.out.print(node + " ");
-            inOrderTraversal(node.right);
+            inOrderTraversal(node.getRight());
         }
     }
 
     @Override
     public void postOrderTraversal(Node node) {
         if (node != null) {
-            postOrderTraversal(node.left);
-            postOrderTraversal(node.right);
-            System.out.print(node.data + " ");
+            postOrderTraversal(node.getLeft());
+            postOrderTraversal(node.getRight());
+            System.out.print(node + " ");
         }
     }
 
     @Override
     public void preOrderTraversal(Node node) {
         if (node != null) {
-            System.out.print(node.data + " ");
-            preOrderTraversal(node.left);
-            preOrderTraversal(node.right);
+            System.out.print(node + " ");
+            preOrderTraversal(node.getLeft());
+            preOrderTraversal(node.getRight());
         }
     }
 
@@ -98,24 +98,24 @@ public class Avl<T extends Comparable<T>> implements IAvl {
     public int height(Node node){
         if(node == null) return -1;
 
-        return node.height;
+        return node.getHeight();
     }
 
     public int getBalance(Node node){
         if(node == null) return 0;
 
-        return height(node.left) - height(node.right);
+        return height(node.getLeft()) - height(node.getRight());
     }
 
     private Node rightRotation(Node node){
         // The node passed in is going to be the right child of its left node.
-        Node newParent = node.left;
-        Node newChild = newParent.right;
+        Node newParent = node.getLeft();
+        Node newChild = newParent.getRight();
 
-        newParent.right = node;
-        node.left = newChild;
+        newParent.setRight(node);
+        node.setLeft(newChild);
 
-        node.height = Math.max(height(node.left), height(node.right) )+1;
+        node.setHeight(Math.max(height(node.getLeft()), height(node.getRight()) )+1);
 
         return newParent;
 
@@ -123,13 +123,13 @@ public class Avl<T extends Comparable<T>> implements IAvl {
 
     private Node leftRotation(Node node){
         // The node passed in is going to be the right child of its left node.
-        Node newParent = node.right;
-        Node newChild = newParent.left;
+        Node newParent = node.getRight();
+        Node newChild = newParent.getLeft();
 
-        newParent.left = node;
-        node.right = newChild;
+        newParent.setLeft(node);
+        node.setRight(newChild);
 
-        node.height = Math.max(height(node.left), height(node.right) )+1;
+        node.setHeight(Math.max(height(node.getLeft()), height(node.getRight()) )+1);
 
         return newParent;
 
@@ -149,28 +149,28 @@ public class Avl<T extends Comparable<T>> implements IAvl {
         if(node == null) return node;
 
         // The data is smaller than the node that we want go left (recursively)
-        if(data.compareTo(node.data) < 0 ){
-            node.left = delete(node.left,data);
-        } else if(data.compareTo(node.data) > 0){
+        if(data.compareTo(node.getData()) < 0 ){
+            node.setLeft(delete(node.getLeft(),data));
+        } else if(data.compareTo(node.getData()) > 0){
             // The data is bigger than the node that we want go right (recursively)
-            node.right = delete(node.right,data);
+            node.setRight(delete(node.getRight(),data));
         } else {
             // we have now found the node we want to remove
 
             // When removing a leaf node just return null.
-            if(node.left == null && node.right == null){
+            if(node.getLeft() == null && node.getRight() == null){
                 return null;
             }
 
             // Removing a node with a single right child
-            if(node.left == null){
-                Node tempNode = node.right;
+            if(node.getLeft() == null){
+                Node tempNode = node.getRight();
                 node = null;
                 // assigning the node for the parent to point to as the temp node
                 return tempNode;
-            } else if(node.right == null){
+            } else if(node.getRight() == null){
                 // Removing a node with a single left child
-                Node tempNode = node.left;
+                Node tempNode = node.getLeft();
                 node = null;
                 // assigning the node for the parent to point to as the temp node
                 return tempNode;
@@ -179,16 +179,16 @@ public class Avl<T extends Comparable<T>> implements IAvl {
             // Removing a node that has two children
 
             // Setting the temporary node to the predecessor which is the biggest node in the left subtree relative to the node that will be deleted.
-            Node tempNode = getPredecessor(node.left);
+            Node tempNode = getPredecessor(node.getLeft());
 
             // setting node to be deleted to the the predecessor data
-            node.data = tempNode.data;
+            node.setData(tempNode.getData());
             // setting the nodes (left child) predecessor to be deleted by putting the nodes data to be deleted where that was then calling this function recusively so its just like removing a leaf node
-            node.left = delete(node.left,tempNode.data);
+            node.setLeft(delete(node.getLeft(),tempNode.getData()));
 
         }
 
-        node.height = Math.max(height(node.left), height(node.right)) +1;
+        node.setHeight(Math.max(height(node.getLeft()), height(node.getRight())) +1);
 
         return settleDeletion(node);
     }
@@ -200,8 +200,8 @@ public class Avl<T extends Comparable<T>> implements IAvl {
         // When it is a left heavy situation this can either mean left-right or doubly left heavy
         if(balance > 1){
             // it will be a left-right heavy situation when the balance on the left sub tree is smaller than 0
-            if(getBalance(node.left) < 0){
-                node.left = leftRotation(node.left);
+            if(getBalance(node.getLeft()) < 0){
+                node.setLeft(leftRotation(node.getLeft()));
             }
             // Otherwise it will be a doubly left heavy situation
             return rightRotation(node);
@@ -210,8 +210,8 @@ public class Avl<T extends Comparable<T>> implements IAvl {
         // When it is a right heavy situation this can either mean right-left or doubly right heavy
         if(balance < -1){
             // it will be a right-left heavy situation when the balance on the right sub tree is greater than 0
-            if(getBalance(node.right) > 0){
-                node.right = rightRotation(node.right);
+            if(getBalance(node.getRight()) > 0){
+                node.setRight(rightRotation(node.getRight()));
             }
             // Otherwise it will be a doubly right heavy situation
             return leftRotation(node);
@@ -222,8 +222,8 @@ public class Avl<T extends Comparable<T>> implements IAvl {
 
     @Override
     public Node getPredecessor(Node node) {
-        if(node.right != null)
-            return getPredecessor(node.right);
+        if(node.getRight() != null)
+            return getPredecessor(node.getRight());
 
         return node;
     }
@@ -241,10 +241,10 @@ public class Avl<T extends Comparable<T>> implements IAvl {
         if(node == null) {
             return false;
         } else {
-            if (node.data.compareTo(key) > 0) {
-                return search(node.left,key);
-            } else if (node.data.compareTo(key) < 0) {
-                return search(node.right,key);
+            if (node.getData().compareTo(key) > 0) {
+                return search(node.getLeft(),key);
+            } else if (node.getData().compareTo(key) < 0) {
+                return search(node.getRight(),key);
             } else {
                 return true;
             }
